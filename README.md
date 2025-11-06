@@ -1,4 +1,4 @@
-# stuffbucket Installers
+# Stuffbucket Installers
 
 This repository contains pre-built installer packages for stuffbucket projects.
 
