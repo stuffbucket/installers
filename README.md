@@ -24,23 +24,31 @@ open stuffbucket-lima-*.pkg
 
 # 3. (Optional) Install VS Code extension
 open stuffbucket-vscode-lima-*.pkg
+```
 
-Verification
+### Verification
 Each release includes a SHA256SUMS file for verification:
 
-Version Information
-Check versions.json in each release for:
+```bash
+shasum -a 256 -c SHA256SUMS
+```
 
-Package versions
-Build timestamp
-Source commit hash
-Alternative Installation
+### Version Information
+Check versions.json in each release for package versions, build timestamps, and source commit hash.
+
+### Alternative Installation
 If you prefer using Homebrew directly:
 
-Source
+```bash
+brew tap stuffbucket/tap
+brew install stuffbucket/tap/lima
+brew install stuffbucket/tap/vscode-lima
+```
+
+### Source
 All packages are built from formulas in stuffbucket/homebrew-tap.
 
-License
+### License
 See individual package licenses in the source repository.
 
 
