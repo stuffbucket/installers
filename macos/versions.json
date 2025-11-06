@@ -1,7 +1,7 @@
 {
   "homebrew": "1.0.0",
   "lima": "2.0.0-beta.0.1",
-  "vscode-lima": "0.0.1",
-  "updated": "2025-11-06T00:39:14Z",
-  "commit": "36289ccd286784d235f7527a27b7b70ab8e0d64c"
+  "vscode-lima": "",
+  "updated": "2025-11-06T00:55:43Z",
+  "commit": "997740a17a939bcd561b06a4cc893ebf072cd576"
 }
