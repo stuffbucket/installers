@@ -10,7 +10,6 @@ Download the latest installers from [Releases](https://github.com/stuffbucket/in
 
 1. **stuffbucket-homebrew-*.pkg** - Sets up stuffbucket Homebrew tap
 2. **stuffbucket-lima-*.pkg** - Installs Lima virtual machines
-3. **stuffbucket-vscode-lima-*.pkg** - Installs VS Code Lima extension
 
 ### Installation Order
 
@@ -21,9 +20,6 @@ open stuffbucket-homebrew-*.pkg
 
 # 2. Install Lima
 open stuffbucket-lima-*.pkg
-
-# 3. (Optional) Install VS Code extension
-open stuffbucket-vscode-lima-*.pkg
 ```
 
 ### Verification
@@ -42,7 +38,19 @@ If you prefer using Homebrew directly:
 ```bash
 brew tap stuffbucket/tap
 brew install stuffbucket/tap/lima
-brew install stuffbucket/tap/vscode-lima
+```
+
+### VS Code Lima Extension
+The VS Code Lima extension is now available through the Visual Studio Code marketplace:
+
+1. Open Visual Studio Code
+2. Go to the Extensions view (Cmd+Shift+X or View > Extensions)
+3. Search for "stuffbucket lima" or "vscode-lima"
+4. Click Install
+
+Alternatively, you can install it from the command line:
+```bash
+code --install-extension stuffbucket.vscode-lima
 ```
 
 ### Source
