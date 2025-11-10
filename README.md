@@ -48,6 +48,8 @@ The VS Code Lima extension is now available through the Visual Studio Code marke
 3. Search for "stuffbucket lima" or "vscode-lima"
 4. Click Install
 
+![VS Code Extension Marketplace](assets/vscode-extension-marketplace.png)
+
 Alternatively, you can install it from the command line:
 ```bash
 code --install-extension stuffbucket.vscode-lima
