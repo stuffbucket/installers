@@ -1,6 +1,7 @@
 {
   "homebrew": "1.0.0",
-  "lima": "2.0.0-beta.0.1",
-  "updated": "2025-11-06T01:20:32Z",
-  "commit": "0904e7bbdd1ca848f28d7049ef48430ad9d3ea6d"
+  "lima": "2.0.0-beta.0.3",
+  "vscode-lima": "See VS Code Marketplace: stuffbucket-co.lima-manager",
+  "updated": "2025-11-10T22:58:04Z",
+  "commit": "c737db277aef73bb1da2fa7e95e163e71f57d5ba"
 }
