@@ -8,18 +8,18 @@ Download the latest installers from [Releases](https://github.com/stuffbucket/in
 
 ### Available Packages
 
-1. **stuffbucket-homebrew-*.pkg** - Sets up stuffbucket Homebrew tap
-2. **stuffbucket-lima-*.pkg** - Installs Lima virtual machines
+1. **stuffbucket-homebrew-1.pkg** - Sets up stuffbucket Homebrew tap
+2. **stuffbucket-lima-2.pkg** - Installs Lima virtual machines
 
 ### Installation Order
 
 Install in this sequence:
 ```bash
 # 1. Install Homebrew tap setup
-open stuffbucket-homebrew-*.pkg
+open stuffbucket-homebrew-1.pkg
 
 # 2. Install Lima
-open stuffbucket-lima-*.pkg
+open stuffbucket-lima-2.pkg
 ```
 
 ### Verification
