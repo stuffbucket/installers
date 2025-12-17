@@ -124,19 +124,19 @@ function Install-LimaFiles {
         Write-Host "[OK] Guest agents installed." -ForegroundColor Green
     }
 
-    # Verify lima.exe exists somewhere in the extracted content
-    $limaExe = Get-ChildItem -Path $TargetPath -Filter "lima.exe" -Recurse | Select-Object -First 1
-    if (-not $limaExe) {
-        throw "lima.exe not found in archive."
+    # Verify limactl.exe exists somewhere in the extracted content
+    $limactlExe = Get-ChildItem -Path $TargetPath -Filter "limactl.exe" -Recurse | Select-Object -First 1
+    if (-not $limactlExe) {
+        throw "limactl.exe not found in archive. Searched under '$TargetPath'."
     }
 
     # Ensure bin directory structure
     $binPath = Join-Path $TargetPath "bin"
-    $expectedExe = Join-Path $binPath "lima.exe"
+    $expectedExe = Join-Path $binPath "limactl.exe"
 
-    if ($limaExe.FullName -ne $expectedExe) {
+    if ($limactlExe.FullName -ne $expectedExe) {
         New-Item -ItemType Directory -Path $binPath -Force | Out-Null
-        Move-Item -Path $limaExe.FullName -Destination $expectedExe -Force
+        Move-Item -Path $limactlExe.FullName -Destination $expectedExe -Force
     }
 
     Write-Host "[OK] Installed to $TargetPath" -ForegroundColor Green
@@ -210,7 +210,7 @@ try {
     Write-Host "[OK] Installation complete!" -ForegroundColor Green
     Write-Host "[INFO] Version: $($release.tag_name)" -ForegroundColor Cyan
     Write-Host "[INFO] Location: $InstallPath" -ForegroundColor Cyan
-    Write-Host "[INFO] Run: lima --version" -ForegroundColor Cyan
+    Write-Host "[INFO] Run: limactl --version" -ForegroundColor Cyan
     Write-Host ""
 }
 catch {
