@@ -141,7 +141,6 @@ $env:PATH = [Environment]::GetEnvironmentVariable("PATH", "User") + ";" + [Envir
 
 ## Security Notes
 
-- Downloads are verified against SHA256 checksums when available
 - Uses TLS 1.2+ for all network connections
 - Installs to user directory (no admin required)
 - Script can be reviewed before execution
