@@ -33,7 +33,6 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
-[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
 $RepoOwner = "stuffbucket"
 $RepoName = "lima"
@@ -49,46 +48,43 @@ function Get-LatestRelease {
     }
 
     Write-Host "[INFO] Fetching release from GitHub..." -ForegroundColor Cyan
-    $headers = @{ "User-Agent" = "lima-installer" }
-    return Invoke-RestMethod -Uri $uri -Headers $headers -TimeoutSec 30
+    return Invoke-RestMethod -Uri $uri -Headers @{ "User-Agent" = "lima-installer" } -TimeoutSec 30 -UseBasicParsing
 }
 
 function Find-WindowsAssets {
     <#
     .DESCRIPTION
         Finds both the main lima binary and guest agents for Windows.
-        Returns a hashtable with 'main' and 'guestagents' keys.
+        Returns an array: [0] = main asset, [1] = guestagents asset (or $null)
     #>
     param([object]$Release)
 
     $arch = if ($env:PROCESSOR_ARCHITECTURE -eq "ARM64") { "aarch64" } else { "x86_64" }
     Write-Host "[INFO] Architecture: $arch" -ForegroundColor Cyan
 
-    $result = @{
-        main = $null
-        guestagents = $null
-    }
+    $mainAsset = $null
+    $guestAgentsAsset = $null
 
     foreach ($asset in $Release.assets) {
         # Match main lima binary (not guestagents)
         if ($asset.name -match "^lima-[^-]+-Windows-$arch\.zip$" -and $asset.name -notmatch "guestagents") {
-            $result.main = $asset
+            $mainAsset = $asset
         }
         # Match guest agents
         if ($asset.name -match "lima-additional-guestagents.*Windows-$arch\.zip$") {
-            $result.guestagents = $asset
+            $guestAgentsAsset = $asset
         }
     }
 
-    if (-not $result.main) {
+    if (-not $mainAsset) {
         throw "No Windows lima binary found for $arch. Available: $($Release.assets.name -join ', ')"
     }
 
-    if (-not $result.guestagents) {
+    if (-not $guestAgentsAsset) {
         Write-Host "[WARN] No guest agents found for $arch" -ForegroundColor Yellow
     }
 
-    return $result
+    return @($mainAsset, $guestAgentsAsset)
 }
 
 function Install-LimaFiles {
@@ -175,31 +171,32 @@ try {
     Write-Host "[OK] Found: $($release.tag_name)" -ForegroundColor Green
 
     $assets = Find-WindowsAssets -Release $release
-    Write-Host "[INFO] Main: $($assets.main.name)" -ForegroundColor Cyan
-    if ($assets.guestagents) {
-        Write-Host "[INFO] Guest Agents: $($assets.guestagents.name)" -ForegroundColor Cyan
+    $mainAsset = $assets[0]
+    $guestAgentsAsset = $assets[1]
+    
+    Write-Host "[INFO] Main: $($mainAsset.name)" -ForegroundColor Cyan
+    if ($guestAgentsAsset) {
+        Write-Host "[INFO] Guest Agents: $($guestAgentsAsset.name)" -ForegroundColor Cyan
     }
 
     $tempDir = Join-Path $env:TEMP "lima-install"
     New-Item -ItemType Directory -Path $tempDir -Force | Out-Null
 
     # Download main lima archive
-    $mainDownloadPath = Join-Path $tempDir $assets.main.name
-    $sizeMB = [math]::Round($assets.main.size / 1048576, 2)
+    $mainDownloadPath = Join-Path $tempDir $mainAsset.name
+    $sizeMB = [math]::Round($mainAsset.size / 1048576, 2)
     Write-Host "[INFO] Downloading lima ($sizeMB MB)..." -ForegroundColor Cyan
 
-    $webClient = New-Object System.Net.WebClient
-    $webClient.Headers.Add("User-Agent", "lima-installer")
-    $webClient.DownloadFile($assets.main.browser_download_url, $mainDownloadPath)
+    Invoke-WebRequest -Uri $mainAsset.browser_download_url -OutFile $mainDownloadPath -UseBasicParsing
     Write-Host "[OK] Lima download complete." -ForegroundColor Green
 
     # Download guest agents if available
     $guestAgentsDownloadPath = $null
-    if ($assets.guestagents) {
-        $guestAgentsDownloadPath = Join-Path $tempDir $assets.guestagents.name
-        $sizeMB = [math]::Round($assets.guestagents.size / 1048576, 2)
+    if ($guestAgentsAsset) {
+        $guestAgentsDownloadPath = Join-Path $tempDir $guestAgentsAsset.name
+        $sizeMB = [math]::Round($guestAgentsAsset.size / 1048576, 2)
         Write-Host "[INFO] Downloading guest agents ($sizeMB MB)..." -ForegroundColor Cyan
-        $webClient.DownloadFile($assets.guestagents.browser_download_url, $guestAgentsDownloadPath)
+        Invoke-WebRequest -Uri $guestAgentsAsset.browser_download_url -OutFile $guestAgentsDownloadPath -UseBasicParsing
         Write-Host "[OK] Guest agents download complete." -ForegroundColor Green
     }
 
